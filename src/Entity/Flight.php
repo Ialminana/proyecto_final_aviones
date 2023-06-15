@@ -24,7 +24,7 @@ class Flight
     #[ORM\Column(length: 255)]
     private ?string $arrivesTo = null;
 
-    #[ORM\OneToMany(mappedBy: 'flight_id', targetEntity: Steward::class)]
+    #[ORM\OneToMany(mappedBy: 'flight', targetEntity: Steward::class)]
     private Collection $stewards;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
@@ -92,7 +92,7 @@ class Flight
     {
         if (!$this->stewards->contains($steward)) {
             $this->stewards->add($steward);
-            $steward->setFlightId($this);
+            $steward->setFlight($this);
         }
 
         return $this;
@@ -102,8 +102,8 @@ class Flight
     {
         if ($this->stewards->removeElement($steward)) {
             // set the owning side to null (unless already changed)
-            if ($steward->getFlightId() === $this) {
-                $steward->setFlightId(null);
+            if ($steward->getFlight() === $this) {
+                $steward->setFlight(null);
             }
         }
 

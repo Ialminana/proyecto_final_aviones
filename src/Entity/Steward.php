@@ -17,11 +17,8 @@ class Steward extends Person
     #[ORM\Column]
     private ?int $air_crew_id = null;
 
-    #[ORM\Column]
-    private ?int $flight = null;
-
     #[ORM\ManyToOne(inversedBy: 'stewards')]
-    private ?Flight $flight_id = null;
+    private ?Flight $flight = null;
 
     public function getId(): ?int
     {
@@ -40,14 +37,14 @@ class Steward extends Person
         return $this;
     }
 
-    public function getFlightId(): ?Flight
+    public function getFlight(): ?Flight
     {
-        return $this->flight_id;
+        return $this->flight;
     }
 
-    public function setFlightId(?Flight $flight_id): static
+    public function setFlight(?Flight $flight): static
     {
-        $this->flight_id = $flight_id;
+        $this->flight = $flight;
 
         return $this;
     }

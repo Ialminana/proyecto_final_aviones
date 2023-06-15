@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Flight;
 use App\Repository\FlightRepository;
+use App\Repository\CaptainRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class FlightController extends AbstractController
 {
 
-    public function __construct(private FlightRepository $flightRepo)
+    public function __construct(private FlightRepository $flightRepo, private CaptainRepository $captainRepo)
     {}
 
     #[Route('/', name: 'app_flight', methods: ['get'])]
@@ -30,7 +31,8 @@ class FlightController extends AbstractController
              'id' => $flight->getId(),
              'number' => $flight->getNumber(),
              'departs' => $flight->getDepartsFrom(),
-             'arrives' => $flight->getArrivesTo(),   
+             'arrives' => $flight->getArrivesTo(),  
+             'captain' => $flight->getCaptain(),
             ];
 
         }
@@ -41,10 +43,12 @@ class FlightController extends AbstractController
     #[Route('/new', name: 'new_flight', methods:['post'])]
     public function create(Request $request): JsonResponse
     {
+        $captain = $this->captainRepo->find($request->request->get('captain'));
         $flight = new Flight();
         $flight->setNumber($request->request->get('number'));
         $flight->setDepartsFrom($request->request->get('departs'));
         $flight->setArrivesTo($request->request->get('arrives'));
+        $flight->setCaptain($captain);
 
         $this->flightRepo->save($flight,true);
 
@@ -67,13 +71,15 @@ class FlightController extends AbstractController
         $flight->setNumber($request->request->get('number'));
         $flight->setDepartsFrom($request->request->get('departs'));
         $flight->setArrivesTo($request->request->get('arrives'));
+        $flight->setCaptain($request->request->get('captain'));
         $entityManager->flush();
 
         $data =  [
             'id' => $flight->getId(),
             'number' => $flight->getNumber(),
             'departs' => $flight->getDepartsFrom(),
-            'arrives' => $flight->getArrivesTo(),   
+            'arrives' => $flight->getArrivesTo(),  
+            'captain' => $flight->getCaptain(), 
            ];
 
         return $this->json($data);
@@ -93,6 +99,7 @@ class FlightController extends AbstractController
             'number' => $flight->getNumber(),
             'departs' => $flight->getDepartsFrom(),
             'arrives' => $flight->getArrivesTo(), 
+            'captain' => $flight->getCaptain(), 
         ];
 
         return $this->json($data);

@@ -4,18 +4,17 @@ namespace App\Controller;
 use App\Entity\Captain;
 use App\Entity\Person;
 use App\Repository\CaptainRepository;
-use App\Repository\PersonRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Persistence\ManagerRegistry;
 
-#[Route ('api/Captain', name: 'api_')]
+#[Route ('api/captain', name: 'api_')]
 class CaptainController extends AbstractController
 {
 
-    public function __construct(private CaptainRepository $captainRepo, private PersonRepository $personRepo)
+    public function __construct(private CaptainRepository $captainRepo)
     {}
 
     #[Route('/', name: 'app_captain', methods: ['get'])]
@@ -32,6 +31,7 @@ class CaptainController extends AbstractController
          'license' => $captain->getCaptainLicenseId(),
          'name' => $captain->getName(),
          'dni' => $captain->getDni(),
+         
             
         ];
 
@@ -74,6 +74,8 @@ class CaptainController extends AbstractController
         $data =  [
             'id' => $captain->getId(),
             'license' => $captain->getCaptainLicenseId(),
+            'name' => $captain->getName(),
+            'dni' => $captain->getDni(),
               
            ];
 
